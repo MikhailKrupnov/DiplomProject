@@ -13,24 +13,18 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
 }
+
+bool Findsignature (QFileInfo file){ // Функция поиска сигнатур в файлах
+    qDebug() << file ;
+}
+
 
 
 MainWindow::~MainWindow()
 {
-//        qDebug() << directory;
-//        QFileInfoList list = directory.entryInfoList(static_cast<QDir::Filter>(filters)); // добавить фильтр по подпапкам !!!
-//        foreach (QFileInfo info, list) {
-//            qDebug() << info;
-//            qDebug() << needsomedirects ;
 
-//            }
 }
-
-
-
-
 void MainWindow::on_addcatalog_clicked()
 {
 
@@ -53,9 +47,9 @@ void MainWindow::on_pushButton_clicked()
     qDebug() << directory;
     QFileInfoList list = directory.entryInfoList(static_cast<QDir::Filter>(filters)); // добавить фильтр по подпапкам !!!
     foreach (QFileInfo info, list) {
-        qDebug() << info.baseName();
-//        qDebug() << needsomedirects ;
+        Findsignature(info);
+        //        qDebug() << needsomedirects ;
 
-        }
+    }
 
 }
