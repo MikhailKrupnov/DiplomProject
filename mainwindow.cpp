@@ -19,13 +19,13 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-    //    qDebug() << directory;
-    //    QFileInfoList list = directory.entryInfoList(static_cast<QDir::Filter>(filters)); // добавить фильтр по подпапкам !!!
-    //    foreach (QFileInfo info, list) {
-    //        qDebug() << info;
-    //        qDebug() << needsomedirects ;
+//        qDebug() << directory;
+//        QFileInfoList list = directory.entryInfoList(static_cast<QDir::Filter>(filters)); // добавить фильтр по подпапкам !!!
+//        foreach (QFileInfo info, list) {
+//            qDebug() << info;
+//            qDebug() << needsomedirects ;
 
-    //        }
+//            }
 }
 
 
@@ -50,4 +50,12 @@ void MainWindow::on_pushButton_clicked()
         filters = QDir::Files | QDir::AllDirs;
     }
     qDebug() << filters;
+    qDebug() << directory;
+    QFileInfoList list = directory.entryInfoList(static_cast<QDir::Filter>(filters)); // добавить фильтр по подпапкам !!!
+    foreach (QFileInfo info, list) {
+        qDebug() << info.baseName();
+//        qDebug() << needsomedirects ;
+
+        }
+
 }
