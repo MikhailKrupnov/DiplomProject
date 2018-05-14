@@ -1,4 +1,4 @@
 # DiplomProject
 
-**Target program:** Signature scaner on c++
+**Target program:** Signature scanner on c++
 
