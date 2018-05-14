@@ -28,7 +28,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_addcatalog_clicked()
 {
-    QString dialog = QFileDialog::getOpenFileName(this, tr("Open File"));
+  parentDir = QFileDialog::getExistingDirectory(this, "Выберите диреторию", parentDir);
+  qDebug() << __PRETTY_FUNCTION__ << parentDir;
 }
 
 void MainWindow::on_pushButton_clicked()
