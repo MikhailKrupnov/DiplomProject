@@ -15,41 +15,36 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 }
 
-bool Findsignature (QFileInfo file){ // Функция поиска сигнатур в файлах
-    qDebug() << file ;
+bool findSignature (const QFileInfo &aFileInfo)
+{ // Функция поиска сигнатур в файлах
+    qDebug() << aFileInfo;
+    return true;
 }
-
-
 
 MainWindow::~MainWindow()
 {
 
 }
+
 void MainWindow::on_addcatalog_clicked()
 {
-
     QString dialog = QFileDialog::getOpenFileName(this, tr("Open File"));
 }
 
 void MainWindow::on_pushButton_clicked()
 {
-    bool needsomedirects =  ui->AllFiles->isChecked();
-    qDebug() << needsomedirects ;
-    QDir directory = QDir("C:\\Users\\user\\Desktop");
-    int filters = 0;
+    bool parseSubDirectories =  ui->AllFiles->isChecked();
+    QDir directory = QDir(parentDir);
+    int filters = QDir::Files | QDir::NoDotAndDotDot;
 
-    if (needsomedirects == false) {
-        filters = QDir::Files ;
-    } else {
-        filters = QDir::Files | QDir::AllDirs;
+    if (parseSubDirectories) {
+        filters = filters | QDir::AllDirs;
     }
-    qDebug() << filters;
-    qDebug() << directory;
-    QFileInfoList list = directory.entryInfoList(static_cast<QDir::Filter>(filters)); // добавить фильтр по подпапкам !!!
-    foreach (QFileInfo info, list) {
-        Findsignature(info);
-        //        qDebug() << needsomedirects ;
-
+    
+    QFileInfoList list = directory.entryInfoList(static_cast<QDir::Filter>(filters));
+    
+    for (const QFileInfo &info : list) {
+        findSignature(info);
     }
 
 }
