@@ -15,15 +15,15 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-
 private slots:
+    
     void on_addcatalog_clicked();
 
     void on_pushButton_clicked();
 
-
 private:
     Ui::MainWindow *ui;
+    QString parentDir = "C/Users/user/Desktop";
 };
 
 #endif // MAINWINDOW_H
