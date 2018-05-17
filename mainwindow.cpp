@@ -1,24 +1,12 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "QDir"
-#include "QFile"
-#include "QFileInfo"
-#include "QDebug"
-#include <QtGui>
-#include "QString"
-#include "QFileDialog"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-}
-
-bool findSignature (const QFileInfo &aFileInfo)
-{ // Функция поиска сигнатур в файлах
-    qDebug() << aFileInfo;
-    return true;
+    ui->pathLabel->setText(parentDir);
 }
 
 MainWindow::~MainWindow()
@@ -26,26 +14,58 @@ MainWindow::~MainWindow()
 
 }
 
-void MainWindow::on_addcatalog_clicked()
-{
-  parentDir = QFileDialog::getExistingDirectory(this, "Выберите диреторию", parentDir);
-  qDebug() << __PRETTY_FUNCTION__ << parentDir;
+void MainWindow::printMessage(const QString &aMessage, bool aBold)
+{ // This function outputs message to UI
+    ui->textEdit->append(aBold?QString("<b>%1</b>").arg(aMessage):aMessage);
 }
 
-void MainWindow::on_pushButton_clicked()
+bool MainWindow::findSignature (const QFileInfo &aFileInfo)
+{ // This function scans file for signatures
+    printMessage(QString("----Scanning file %1").arg(aFileInfo.fileName()));
+    
+    // magic by Misha
+    
+    return true;
+}
+
+void MainWindow::scanFilesList (const QFileInfoList &aList)
 {
-    bool parseSubDirectories =  ui->AllFiles->isChecked();
-    QDir directory = QDir(parentDir);
-    int filters = QDir::Files | QDir::NoDotAndDotDot;
-
-    if (parseSubDirectories) {
-        filters = filters | QDir::AllDirs;
+    for (const auto &file : aList ) {
+        if (true == findSignature(file)) {
+            printMessage(QString("Signatures found in %1").arg(file.fileName()), true);
+        }
     }
+}
+
+quint64 MainWindow::scanDirectory (const QString &aPath, bool aRecursive)
+{
+    quint64 filesScanedCount = 0;
+    printMessage(QString("--Scanning directory %1").arg(aPath));
+    QFileInfoList infoList = QDir(aPath).entryInfoList(QDir::Files | QDir::NoDotAndDotDot);
+    scanFilesList(infoList);
+    filesScanedCount += infoList.size();
     
-    QFileInfoList list = directory.entryInfoList(static_cast<QDir::Filter>(filters));
-    
-    for (const QFileInfo &info : list) {
-        findSignature(info);
+    if (aRecursive) {
+        QStringList subDirs = QDir(aPath).entryList(QDir::AllDirs | QDir::NoDotAndDotDot);
+        for (const auto & path : subDirs) {
+            filesScanedCount += scanDirectory (aPath + "/" + path, aRecursive);
+        }
     }
 
+    return filesScanedCount;
+}
+
+void MainWindow::on_selectDirectory_clicked()
+{
+    parentDir = QFileDialog::getExistingDirectory(this, "Выберите диреторию", parentDir);
+    ui->pathLabel->setText(parentDir);
+}
+
+void MainWindow::on_scanButton_clicked()
+{
+    ui->textEdit->clear();
+    bool recursive =  ui->recursive->isChecked();
+    quint64 filesScanedCount = scanDirectory(parentDir, recursive);
+    printMessage("");
+    printMessage(QString("Scanned %1 files").arg(filesScanedCount), true);
 }
