@@ -19,13 +19,25 @@ void MainWindow::printMessage(const QString &aMessage, bool aBold)
     ui->textEdit->append(aBold?QString("<b>%1</b>").arg(aMessage):aMessage);
 }
 
-bool MainWindow::findSignature (const QFileInfo &aFileInfo)
-{ // This function scans file for signatures
-    printMessage(QString("----Scanning file %1").arg(aFileInfo.fileName()));
-    
+bool MainWindow::findSignature (const QFileInfo &qFileInfo)
+{ // This function scans file for signatures ""
+   printMessage(QString("----Scanning file %1").arg(qFileInfo.fileName()));
+   QString path = qFileInfo.filePath();
+   QFile file(path);
+   QByteArray data;
+   if (!file.open(QIODevice::ReadOnly)){
+       qDebug() << "Not open" << file.isOpen();
+       qDebug() << file.fileName();
+       return false;
+
+   }
+
+   data = file.readAll();
+    qDebug() << QString(data);
+
     // magic by Misha
-    
-    return true;
+
+//    return true;
 }
 
 void MainWindow::scanFilesList (const QFileInfoList &aList)

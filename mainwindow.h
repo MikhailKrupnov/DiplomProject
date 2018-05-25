@@ -7,6 +7,8 @@
 #include <QFile>
 #include <QDebug>
 #include <QFileDialog>
+#include <QByteArray>
+#include <QString>
 
 namespace Ui {
 class MainWindow;
@@ -21,10 +23,10 @@ public:
     ~MainWindow();
 
     void printMessage(const QString &aMessage, bool aBold = false);
-    bool findSignature (const QFileInfo &aFileInfo);
+    bool findSignature (const QFileInfo &qFileInfo);
     void scanFilesList (const QFileInfoList &aList);
     quint64 scanDirectory(const QString &aPath, bool aRecursive);
-
+    bool findSignature();
 private slots:
     
     void on_selectDirectory_clicked();
